@@ -1,4 +1,4 @@
-module Metro.Suggest where
+module Metro.Suggest (suggest) where
 
 import Data.List
 
