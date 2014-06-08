@@ -1,6 +1,8 @@
 module Metro.Suggest where
 
-data SuggestResult a = SuggestResult a Int
+import Data.List
+
+data SuggestResult a = SuggestResult Int a deriving (Show, Eq, Ord)
 
 -- | Calculate string relevance based on search pattern.
 -- It assigns each found char a relevance of 1 and grows
@@ -13,4 +15,10 @@ rate pattern target = rateAcc pattern target 1
           | x == y    = max (rateAcc xs ys (acc * 2) + acc) (rateAcc s ys 1)
           | otherwise = rateAcc s ys 1
 
--- suggest :: [String] -> String -> [SuggestResult]
+
+-- | Provide a list of search suggestions sorted
+-- descendingly by relevance
+suggest :: Ord a => [a] -> (a -> String) -> String -> [SuggestResult a]
+suggest xs extractFn pattern = sortDesc $ zipWith SuggestResult (map relevance xs) xs
+  where sortDesc  = sortBy $ flip compare
+        relevance = rate pattern . extractFn
