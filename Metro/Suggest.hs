@@ -18,7 +18,7 @@ rate test target = rateAcc test target 1
 
 -- | Provide a list of search suggestions sorted
 -- descendingly by relevance
-suggest :: Ord a => [a] -> (a -> String) -> String -> [SuggestResult a]
-suggest xs extractFn test = sortDesc $ zipWith SuggestResult (map relevance xs) xs
+suggest :: Ord a => String -> [a] -> (a -> String) -> [SuggestResult a]
+suggest test xs extractFn = sortDesc $ zipWith SuggestResult (map relevance xs) xs
   where sortDesc  = sortBy $ flip compare
         relevance = rate test . extractFn
