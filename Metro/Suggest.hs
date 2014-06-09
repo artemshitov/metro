@@ -8,12 +8,12 @@ data SuggestResult a = SuggestResult Int a deriving (Show, Eq, Ord)
 -- It assigns each found char a relevance of 1 and grows
 -- it exponentially if the found chars are adjacent.
 score :: String -> String -> Int
-score test target = rateAcc test target 1
-  where rateAcc [] _ _ = 0
-        rateAcc _ [] _ = 0
-        rateAcc s@(x:xs) (y:ys) acc
-          | x == y    = max (rateAcc xs ys (acc * 2) + acc) (rateAcc s ys 1)
-          | otherwise = rateAcc s ys 1
+score test target = scoreAcc test target 1
+  where scoreAcc [] _ _ = 0
+        scoreAcc _ [] _ = 0
+        scoreAcc s@(x:xs) (y:ys) acc
+          | x == y    = max (scoreAcc xs ys (acc * 2) + acc) (scoreAcc s ys 1)
+          | otherwise = scoreAcc s ys 1
 
 
 -- | Provide a list of search suggestions sorted
