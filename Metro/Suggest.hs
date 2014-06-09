@@ -7,8 +7,8 @@ data SuggestResult a = SuggestResult Int a deriving (Show, Eq, Ord)
 -- | Calculate string relevance based on search pattern.
 -- It assigns each found char a relevance of 1 and grows
 -- it exponentially if the found chars are adjacent.
-rate :: String -> String -> Int
-rate test target = rateAcc test target 1
+score :: String -> String -> Int
+score test target = rateAcc test target 1
   where rateAcc [] _ _ = 0
         rateAcc _ [] _ = 0
         rateAcc s@(x:xs) (y:ys) acc
@@ -21,4 +21,4 @@ rate test target = rateAcc test target 1
 suggest :: Ord a => String -> [a] -> (a -> String) -> [SuggestResult a]
 suggest test xs extractFn = sortDesc $ zipWith SuggestResult (map relevance xs) xs
   where sortDesc  = sortBy $ flip compare
-        relevance = rate test . extractFn
+        relevance = score test . extractFn
