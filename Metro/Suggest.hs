@@ -1,4 +1,4 @@
-module Metro.Suggest (suggest) where
+module Metro.Suggest (suggest, suggestBy) where
 
 import Data.List
 
@@ -18,7 +18,10 @@ score test target = rateAcc test target 1
 
 -- | Provide a list of search suggestions sorted
 -- descendingly by relevance
-suggest :: Ord a => String -> [a] -> (a -> String) -> [SuggestResult a]
-suggest test xs extractFn = sortDesc $ zipWith SuggestResult (map relevance xs) xs
+suggestBy :: Ord a => String -> [a] -> (a -> String) -> [SuggestResult a]
+suggestBy test xs extractFn = sortDesc $ zipWith SuggestResult (map relevance xs) xs
   where sortDesc  = sortBy $ flip compare
         relevance = score test . extractFn
+
+suggest :: String -> [String] -> [SuggestResult String]
+suggest test xs = suggestBy test xs id
